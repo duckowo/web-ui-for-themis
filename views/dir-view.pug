@@ -1,0 +1,12 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title= title
+    body 
+        h2 #{`Nội dung của thư mục ${path}`}
+        ul 
+            for e in content
+                li 
+                    a(href=`/problem${e.path}`)= `${e.name}`
