@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import chokidar from 'chokidar';
-import { SUBMIT_DIR, NOT_JUDGED } from './configs';
+import { SUBMIT_DIR, NOT_JUDGED_TEXT } from './configs';
 import logger from './logging';
 
 if (!fs.existsSync(SUBMIT_DIR)) fs.mkdirSync(SUBMIT_DIR);
@@ -32,15 +32,14 @@ export async function getSubmits(user: string) {
 	const userSubmits = db[user];
 
 	if (userSubmits) {
-		Object.keys(userSubmits).forEach((name) => {
-			const submitLangs = userSubmits[name];
-			Object.keys(submitLangs).forEach((ext) => {
-				const data = submitLangs[ext];
+		Object.keys(userSubmits).forEach((problem) => {
+			Object.keys(userSubmits[problem]).forEach((ext) => {
+				const data = userSubmits[problem][ext];
 
 				submits.push({
-					name,
+					name: problem,
 					ext,
-					score: data.judged ? data.score : NOT_JUDGED,
+					score: data.judged ? data.score : NOT_JUDGED_TEXT,
 				});
 			});
 		});
@@ -54,7 +53,12 @@ export function getSubmitResultContent(submitName: string) {
 	return fs.readFileSync(filePath).toString('utf-8');
 }
 
+export function getAllSubmits() {
+	return db;
+}
+
 async function loadSubmitFile(file: string): Promise<void> {
+	logger.info(`Loading ${file}`);
 	const statusText = await getSubmitLogOverview(path.join(SUBMIT_LOGS_DIR, file));
 	const submitFileName = file.slice(0, file.lastIndexOf('.log'));
 
@@ -66,7 +70,7 @@ async function loadSubmitFile(file: string): Promise<void> {
 
 	const extDot = submitFileName.lastIndexOf('.');
 	data.ext = submitFileName.slice(extDot + 1);
-	const elements = submitFileName.slice(0, extDot).split('][');
+	const elements = submitFileName.slice(submitFileName.indexOf('['), extDot).split('][');
 	data.user = elements[0].slice(1);
 	data.name = elements[1].slice(0, -1);
 
@@ -89,6 +93,7 @@ async function loadSubmitFile(file: string): Promise<void> {
 }
 
 async function deleteSubmitFile(file: string): Promise<void> {
+	logger.info(`Removing ${file}`);
 	const submitFileName = file.slice(0, file.lastIndexOf('.log'));
 
 	let data = {
@@ -99,7 +104,7 @@ async function deleteSubmitFile(file: string): Promise<void> {
 
 	const extDot = submitFileName.lastIndexOf('.');
 	data.ext = submitFileName.slice(extDot + 1);
-	const elements = submitFileName.slice(0, extDot).split('][');
+	const elements = submitFileName.slice(submitFileName.indexOf('['), extDot).split('][');
 	data.user = elements[0].slice(1);
 	data.name = elements[1].slice(0, -1);
 
@@ -134,21 +139,22 @@ function getSubmitLogOverview(file: string): Promise<string> {
 const watcher = chokidar.watch(SUBMIT_LOGS_DIR);
 
 watcher.on('add', (filePath) => {
-	loadSubmitFile(path.basename(filePath));
+	const fileName = path.basename(filePath);
+	if (filePath.endsWith('.log')) {
+		loadSubmitFile(fileName);
+	}
 });
 
 watcher.on('change', (filePath) => {
-	loadSubmitFile(path.basename(filePath));
+	const fileName = path.basename(filePath);
+	if (filePath.endsWith('.log')) {
+		loadSubmitFile(fileName);
+	}
 });
 
 watcher.on('unlink', (filePath) => {
-	deleteSubmitFile(path.basename(filePath));
-});
-
-fs.readdir(SUBMIT_LOGS_DIR, (err, files) => {
-	if (err) {
-		logger.error('Error occurred while loading Logs', err);
-	} else {
-		files.forEach((file) => loadSubmitFile(file));
+	const fileName = path.basename(filePath);
+	if (filePath.endsWith('.log')) {
+		deleteSubmitFile(fileName);
 	}
 });

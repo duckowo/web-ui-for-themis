@@ -13,9 +13,9 @@ html(lang="en")
                 form(action="/auth/repass", method="post")
                     input(type="password" name="password" placeholder="Mật khẩu" class="text-input")
                     br
-                    input(type="password" name="new-password" placeholder="Mật khẩu mới" class="text-input")
+                    input(type="password" name="newPassword" placeholder="Mật khẩu mới" class="text-input")
                     br
-                    input(type="password" name="repeat-new-password" placeholder="Nhập lại mật khẩu mới" class="text-input")
+                    input(type="password" name="repeatNewPassword" placeholder="Nhập lại mật khẩu mới" class="text-input")
                     br
                     input(type="submit" id="submit" value="Thay đổi mật khẩu" class="btn")
                 p(class="failed-msg" style=`color: ${failed ? "red" : "white"}`) Mật khẩu cũ không chính xác hoặc mật khẩu mới không hợp lệ

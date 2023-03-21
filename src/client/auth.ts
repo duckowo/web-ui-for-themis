@@ -21,15 +21,15 @@ auth.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
 });
 
 auth.post('/repass', bodyParser.urlencoded({ extended: true }), cookieParser(), (req, res) => {
-	const token = req.cookies['token'];
+	const token = req.cookies.token;
 
 	if (!token) {
 		res.status(401).end();
 	} else {
 		const username = parseToken(token);
-		const oldPassword = req.body['password'];
-		const newPassword = req.body['new-password'];
-		const repeatNewPassword = req.body['repeat-new-password'];
+		const oldPassword = req.body.password;
+		const newPassword = req.body.newPassword;
+		const repeatNewPassword = req.body.repeatNewPassword;
 
 		if (!oldPassword || !newPassword || !repeatNewPassword) {
 			res.redirect('/repass?retry=1');

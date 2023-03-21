@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import auth from './auth';
-import problem from './problems';
+import problem from './problem';
 import submit from './submit';
 
 const client = Router();

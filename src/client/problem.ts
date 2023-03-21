@@ -5,9 +5,13 @@ import { PROBLEMS_DIR } from '../utils/configs';
 
 const problem = Router();
 
+if (!fs.existsSync(PROBLEMS_DIR)) {
+	fs.mkdirSync(PROBLEMS_DIR);
+}
+
 problem.get('/*', (req, res) => {
 	const joinedPath = path.join(PROBLEMS_DIR, req.path);
-	const getJson = req.query['json'];
+	const getJson = req.query.json;
 
 	if (!fs.existsSync(joinedPath)) {
 		if (getJson) res.json([]).end();

@@ -6,7 +6,7 @@ import { getAccounts } from './utils/accounts';
 const views = Router();
 
 views.get('/', cookieParser(), (req, res) => {
-	const token = req.cookies['token'];
+	const token = req.cookies.token;
 	if (!token) {
 		res.redirect('/login');
 	} else {
@@ -22,8 +22,8 @@ views.get('/', cookieParser(), (req, res) => {
 });
 
 views.get('/login', cookieParser(), (req, res) => {
-	const token = req.cookies['token'];
-	const retry = req.query['retry'];
+	const token = req.cookies.token;
+	const retry = req.query.retry;
 
 	if (!token) {
 		res.render('login', { failed: retry });
@@ -38,8 +38,8 @@ views.get('/login', cookieParser(), (req, res) => {
 });
 
 views.get('/repass', cookieParser(), (req, res) => {
-	const token = req.cookies['token'];
-	const retry = req.query['retry'];
+	const token = req.cookies.token;
+	const retry = req.query.retry;
 
 	if (!token) {
 		res.redirect('/login');
@@ -53,8 +53,13 @@ views.get('/repass', cookieParser(), (req, res) => {
 	}
 });
 
-views.get('/ranking', (req, res) => {
-	res.send('In dev');
+views.get('/ranking', cookieParser(), (req, res) => {
+	const token = req.cookies.token;
+	if (!token) {
+		res.redirect('/login');
+	} else {
+		res.render('ranking');
+	}
 });
 
 export default views;
