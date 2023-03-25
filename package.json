@@ -1,16 +1,15 @@
 {
 	"name": "web-ui-for-themis",
-	"version": "1.0.0",
+	"version": "1.0.0-beta3",
 	"description": "A Web UI for Themis",
 	"author": "Nguyen The Viet - Tin K30 - THPT Chuyen Bac Ninh",
 	"license": "MIT",
 	"scripts": {
 		"dev": "cross-env PORT=8080 nodemon src/main.ts test_class",
 		"prettier": "prettier . --write",
-		"build": "tsc"
+		"build": "node scripts/clean.js && tsc && node scripts/build.js"
 	},
 	"dependencies": {
-		"@types/morgan": "^1.9.4",
 		"body-parser": "^1.20.2",
 		"chokidar": "^3.5.3",
 		"cookie-parser": "^1.4.6",

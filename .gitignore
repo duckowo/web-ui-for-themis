@@ -1,5 +1,5 @@
-logs
 node_modules
-submissions
-public/libs
+build
+out
 test_class
+*.log

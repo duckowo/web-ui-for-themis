@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import auth from './auth';
-import problem from './problem';
-import submit from './submit';
+import problems from './problems';
+import submits from './submits';
 
 const client = Router();
 
 client.use('/auth', auth);
-client.use('/problem', problem);
-client.use('/submit', submit);
+client.use('/problem', problems);
+client.use('/submit', submits);
 
 export default client;

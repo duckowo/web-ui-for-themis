@@ -2,7 +2,7 @@ import e, { Router } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import logger from '../utils/logging';
-import { createSubmit, getAllSubmits, getSubmitResultContent, getSubmits } from '../utils/submit';
+import { createSubmit, getAllSubmits, getSubmitResultContent, getSubmits } from '../utils/submits';
 import { parseToken } from '../utils/token';
 import { getAccounts } from '../utils/accounts';
 import { ENABLE_SUBMIT_VIEW } from '../utils/configs';

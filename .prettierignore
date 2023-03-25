@@ -1,5 +1,6 @@
-logs
 node_modules
-submissions
+build
+out
 public/libs
 test_class
+views

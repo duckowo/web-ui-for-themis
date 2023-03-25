@@ -14,6 +14,4 @@ export const LOGS_DIR = path.join(WORK_DIR, config.LOGS_DIR);
 export const ACCOUNTS_FILE = path.join(WORK_DIR, config.ACCOUNTS_FILE);
 export const PROBLEMS_DIR = path.join(WORK_DIR, config.PROBLEMS_DIR);
 export const SUBMIT_DIR = path.join(WORK_DIR, config.SUBMIT_DIR);
-export const NOT_JUDGED_TEXT = config.NOT_JUDGED_TEXT;
-export const ENABLE_PENALTY = config.ENABLE_PENALTY;
 export const ENABLE_SUBMIT_VIEW = config.ENABLE_SUBMIT_VIEW;

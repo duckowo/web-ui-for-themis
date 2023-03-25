@@ -3,10 +3,5 @@
 	"ACCOUNTS_FILE": "accounts.csv",
 	"PROBLEMS_DIR": "problems",
 	"SUBMIT_DIR": "submissions",
-	"NOT_JUDGED_TEXT": "Chưa chấm",
-	"SUBMIT_VIEW_DISABLE_MSG": "Tính năng xem trạng thái bài nộp bị vô hiệu",
-	"USERS_COL": "Người dùng",
-	"SUM_ALL_PROBLEMS_COL": "Tổng",
-	"ENABLE_PENALTY": true,
 	"ENABLE_SUBMIT_VIEW": true
 }
