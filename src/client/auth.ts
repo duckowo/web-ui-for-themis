@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { getAccounts, setAccount } from '../utils/accounts';
 import { genToken, parseToken } from '../utils/token';
+import logger from '../utils/logging';
 
 const auth = Router();
 
@@ -10,13 +11,20 @@ auth.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
 
-	const acc = getAccounts().find((acc) => acc.username == username);
-
-	if (!acc || acc.password != password) {
-		res.redirect('/login?retry=1');
+	if (!username || !password) {
+		res.redirect('/login?retry=1'); // Missing information
 	} else {
-		const token = genToken(username);
-		res.cookie('token', token).redirect('/');
+		logger.info(`Processing login request for user: ${username}`);
+
+		const acc = getAccounts().find((acc) => acc.username == username);
+
+		if (!acc || acc.password != password) {
+			res.redirect('/login?retry=1'); // Login failed
+		} else {
+			// Login success set cookie and redirect to home page
+			const token = genToken(username);
+			res.cookie('token', token).redirect('/');
+		}
 	}
 });
 
@@ -24,26 +32,33 @@ auth.post('/repass', bodyParser.urlencoded({ extended: true }), cookieParser(), 
 	const token = req.cookies.token;
 
 	if (!token) {
-		res.status(401).end();
+		res.redirect('/login'); // User doesn't logged in
 	} else {
 		const username = parseToken(token);
-		const oldPassword = req.body.password;
-		const newPassword = req.body.newPassword;
-		const repeatNewPassword = req.body.repeatNewPassword;
 
-		if (!oldPassword || !newPassword || !repeatNewPassword) {
-			res.redirect('/repass?retry=1');
+		if (!username) {
+			res.redirect('/login'); // Token is invalid
 		} else {
-			if (newPassword != repeatNewPassword) {
+			const oldPassword = req.body.password;
+			const newPassword = req.body.newPassword;
+			const repeatNewPassword = req.body.repeatNewPassword;
+
+			if (!oldPassword || !newPassword || !repeatNewPassword) {
 				res.redirect('/repass?retry=1');
 			} else {
-				const acc = getAccounts().find((acc) => acc.username == username)!;
-
-				if (acc.password != oldPassword) {
+				if (newPassword != repeatNewPassword) {
 					res.redirect('/repass?retry=1');
 				} else {
-					setAccount(username, newPassword);
-					res.redirect('/');
+					logger.info(`Processing repass request for user: ${username}`);
+
+					const acc = getAccounts().find((acc) => acc.username == username)!;
+
+					if (acc.password != oldPassword) {
+						res.redirect('/repass?retry=1');
+					} else {
+						setAccount(username, newPassword);
+						res.redirect('/');
+					}
 				}
 			}
 		}

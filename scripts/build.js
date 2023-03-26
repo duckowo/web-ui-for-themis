@@ -7,6 +7,7 @@ const packageFile = path.join(buildDir, 'package.json');
 const dirs = ['out', 'data', 'public', 'views'];
 
 for (let dir of dirs) {
+	console.log(`Copying ${dir}...`);
 	fs.cpSync(path.join(process.cwd(), dir), path.join(buildDir, dir), { recursive: true });
 }
 

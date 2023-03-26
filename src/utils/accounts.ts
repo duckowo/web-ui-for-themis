@@ -17,6 +17,7 @@ let header = {
 	password: 1,
 	fullname: 2,
 };
+let skipNextChange = false;
 
 function parseAccountsFile() {
 	accounts = [];
@@ -43,14 +44,14 @@ function parseAccountsFile() {
 }
 
 function stringifyAccounts() {
-	const records = [Array<string>(3)];
+	const records = [['', '', '']];
 
 	records[0][header.username] = 'username';
 	records[0][header.password] = 'password';
 	records[0][header.fullname] = 'fullname';
 
 	for (let account of accounts) {
-		const record = Array<string>(3);
+		const record = ['', '', ''];
 		record[header.username] = account.username;
 		record[header.password] = account.password;
 		record[header.fullname] = account.fullname;
@@ -76,6 +77,7 @@ export function setAccount(username: string, password: string) {
 		}
 	}
 
+	skipNextChange = true;
 	stringifyAccounts();
 }
 
@@ -84,8 +86,12 @@ if (!fs.existsSync(ACCOUNTS_FILE)) {
 }
 
 chokidar.watch(ACCOUNTS_FILE).on('change', () => {
-	logger.info('Accounts file changes detected, reloading...');
-	parseAccountsFile();
+	if (skipNextChange) {
+		skipNextChange = false;
+	} else {
+		logger.info('Accounts file changes detected, reloading...');
+		parseAccountsFile();
+	}
 });
 
 parseAccountsFile();

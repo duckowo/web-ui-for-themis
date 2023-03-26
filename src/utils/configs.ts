@@ -2,6 +2,9 @@ import path from 'path';
 import fs from 'fs';
 
 const WORK_DIR = path.resolve(process.argv[2] ? process.argv[2] : 'default');
+
+if (!fs.existsSync(WORK_DIR)) fs.mkdirSync(WORK_DIR);
+
 const CONFIG_FILE = path.join(WORK_DIR, 'config.json');
 
 if (!fs.existsSync(CONFIG_FILE)) {

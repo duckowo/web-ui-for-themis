@@ -23,8 +23,12 @@ submit.post('/new/:id/:ext', cookieParser(), bodyParser.text(), (req, res) => {
 			if (!acc) {
 				return res.status(401).end();
 			} else {
+				const problem = req.params.id.toUpperCase();
+
+				logger.info(`Processing submit for problem: ${problem} by user: ${username}`);
+
 				try {
-					createSubmit(`[${username}][${req.params.id.toUpperCase()}].${req.params.ext}`, req.body);
+					createSubmit(`[${username}][${problem}].${req.params.ext}`, req.body);
 					res.status(200).end();
 				} catch (e) {
 					logger.error(`Cannot create submission: `, e);
