@@ -7,6 +7,7 @@ const views = Router();
 
 views.get('/', cookieParser(), (req, res) => {
 	const token = req.cookies.token;
+	
 	if (!token) {
 		res.redirect('/login');
 	} else {
@@ -19,6 +20,8 @@ views.get('/', cookieParser(), (req, res) => {
 			res.render('home', { username: acc.fullname || acc.username, userId: acc.username });
 		}
 	}
+
+	res.end();
 });
 
 views.get('/login', cookieParser(), (req, res) => {
@@ -35,6 +38,8 @@ views.get('/login', cookieParser(), (req, res) => {
 			res.redirect('/');
 		}
 	}
+
+	res.end();
 });
 
 views.get('/repass', cookieParser(), (req, res) => {
@@ -51,15 +56,20 @@ views.get('/repass', cookieParser(), (req, res) => {
 			res.render('repass', { failed: retry });
 		}
 	}
+
+	res.end();
 });
 
 views.get('/ranking', cookieParser(), (req, res) => {
 	const token = req.cookies.token;
+	
 	if (!token) {
 		res.redirect('/login');
 	} else {
 		res.render('ranking');
 	}
+
+	res.end();
 });
 
 export default views;

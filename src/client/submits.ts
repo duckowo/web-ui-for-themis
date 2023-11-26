@@ -1,4 +1,4 @@
-import e, { Router } from 'express';
+import { Router } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import logger from '../utils/logging';
@@ -46,9 +46,7 @@ submit.get('/get/:user', async (req, res) => {
 });
 
 submit.get('/view/:file', (req, res) => {
-	if (!ENABLE_SUBMIT_VIEW) {
-		res.send('Bạn không được cho phép để xem trạng thái bài nộp').end();
-	}
+	if (!ENABLE_SUBMIT_VIEW) return res.send('Bạn không được cho phép để xem trạng thái bài nộp').end();
 
 	try {
 		res.write(getSubmitResultContent(req.params.file));
@@ -58,7 +56,7 @@ submit.get('/view/:file', (req, res) => {
 	}
 });
 
-submit.get('/all', (req, res) => {
+submit.get('/all', (_req, res) => {
 	const data: Record<string, Record<string, number>> = {};
 	const problems: string[] = [];
 
@@ -96,7 +94,7 @@ submit.get('/all', (req, res) => {
 
 	headers = ['Thí sinh', 'Tổng điểm', ...headers];
 
-	res.json([headers, ...rows]).end;
+	res.json([headers, ...rows]).end();
 });
 
 export default submit;

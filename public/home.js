@@ -1,4 +1,3 @@
-const regex = /(\\r\\n|\\n)/gi;
 const db = {
 	cpp: 'c_cpp',
 	c: 'c_cpp',
@@ -81,14 +80,6 @@ async function updateResults() {
 	resultsArea.innerHTML = rendereds.join('<br />');
 }
 
-setInterval(() => {
-	updateProblems();
-	updateResults();
-}, 1000);
-
-updateProblems();
-updateResults();
-
 submitButton.onclick = async () => {
 	const content = editor.session.getValue();
 	const fileName = fileNameInput.value;
@@ -116,3 +107,10 @@ submitButton.onclick = async () => {
 		}
 	}
 };
+
+updateProblems();
+updateResults();
+setInterval(() => {
+	updateProblems();
+	updateResults();
+}, 1000);

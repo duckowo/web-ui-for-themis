@@ -12,19 +12,20 @@ auth.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
 	const password = req.body.password;
 
 	if (!username || !password) {
-		res.redirect('/login?retry=1'); // Missing information
+		res.redirect('/login?retry=1');
 	} else {
 		logger.info(`Processing login request for user: ${username}`);
 
 		const acc = getAccounts().find((acc) => acc.username == username);
 
 		if (!acc || acc.password != password) {
-			res.redirect('/login?retry=1'); // Login failed
+			res.redirect('/login?retry=1');
 		} else {
-			// Login success set cookie and redirect to home page
 			const token = genToken(username);
 			res.cookie('token', token).redirect('/');
 		}
+
+		res.end();
 	}
 });
 
@@ -32,12 +33,12 @@ auth.post('/repass', bodyParser.urlencoded({ extended: true }), cookieParser(), 
 	const token = req.cookies.token;
 
 	if (!token) {
-		res.redirect('/login'); // User doesn't logged in
+		res.redirect('/login');
 	} else {
 		const username = parseToken(token);
 
 		if (!username) {
-			res.redirect('/login'); // Token is invalid
+			res.redirect('/login');
 		} else {
 			const oldPassword = req.body.password;
 			const newPassword = req.body.newPassword;
@@ -63,6 +64,8 @@ auth.post('/repass', bodyParser.urlencoded({ extended: true }), cookieParser(), 
 			}
 		}
 	}
+
+	res.end();
 });
 
 export default auth;

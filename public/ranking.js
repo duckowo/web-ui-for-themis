@@ -18,5 +18,5 @@ async function updateRank() {
 	table.innerHTML = str;
 }
 
-setInterval(setInterval, 60000);
 updateRank();
+setInterval(updateRank, 10000);

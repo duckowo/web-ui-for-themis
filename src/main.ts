@@ -10,10 +10,10 @@ logger.info('Starting server...');
 
 const app = express();
 
-app.set('views', './views'); // Views directory
-app.set('view engine', 'pug'); // Rendering engine
+app.set('views', './views');
+app.set('view engine', 'pug');
 
-app.use(express.static('public')); // Public directory
+app.use(express.static('public'));
 
 app.use('/', views);
 app.use('/', client);

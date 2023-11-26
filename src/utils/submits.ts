@@ -59,36 +59,42 @@ export function getAllSubmits() {
 
 async function loadSubmitFile(file: string): Promise<void> {
 	logger.info(`Loading submit data from ${file}`);
-	const statusText = await getSubmitLogOverview(path.join(SUBMIT_LOGS_DIR, file));
-	const submitFileName = file.slice(0, file.lastIndexOf('.log'));
 
-	let data = {
-		user: '',
-		name: '',
-		ext: '',
-	};
+	try {
+		const statusText = await getSubmitLogOverview(path.join(SUBMIT_LOGS_DIR, file));
 
-	const extDot = submitFileName.lastIndexOf('.');
-	data.ext = submitFileName.slice(extDot + 1);
-	const elements = submitFileName.slice(submitFileName.indexOf('['), extDot).split('][');
-	data.user = elements[0].slice(1);
-	data.name = elements[1].slice(0, -1);
+		const submitFileName = file.slice(0, file.lastIndexOf('.log'));
 
-	if (!db[data.user]) db[data.user] = {};
-	if (!db[data.user][data.name]) db[data.user][data.name] = {};
-
-	const score = parseFloat(statusText.split(': ')[1]);
-
-	if (isNaN(score)) {
-		db[data.user][data.name][data.ext] = {
-			judged: false,
-			score: 0,
+		let data = {
+			user: '',
+			name: '',
+			ext: '',
 		};
-	} else {
-		db[data.user][data.name][data.ext] = {
-			judged: true,
-			score,
-		};
+
+		const extDot = submitFileName.lastIndexOf('.');
+		data.ext = submitFileName.slice(extDot + 1);
+		const elements = submitFileName.slice(submitFileName.indexOf('['), extDot).split('][');
+		data.user = elements[0].slice(1);
+		data.name = elements[1].slice(0, -1);
+
+		if (!db[data.user]) db[data.user] = {};
+		if (!db[data.user][data.name]) db[data.user][data.name] = {};
+
+		const score = parseFloat(statusText.split(': ')[1]);
+
+		if (isNaN(score)) {
+			db[data.user][data.name][data.ext] = {
+				judged: false,
+				score: 0,
+			};
+		} else {
+			db[data.user][data.name][data.ext] = {
+				judged: true,
+				score,
+			};
+		}
+	} catch (e) {
+		logger.error(`Cannot load submit data from ${file}`, e);
 	}
 }
 
@@ -114,9 +120,11 @@ function deleteSubmitFile(file: string): void {
 function getSubmitLogOverview(file: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const readStream = fs.createReadStream(file, { encoding: 'utf-8' });
-		let acc: string = '';
-		let pos = 0,
-			index = -1;
+		
+		let acc = '';
+		let pos = 0;
+		let index = -1;
+
 		readStream
 			.on('data', (chunk) => {
 				index = chunk.indexOf('\n');
