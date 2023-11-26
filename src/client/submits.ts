@@ -46,7 +46,8 @@ submit.get('/get/:user', async (req, res) => {
 });
 
 submit.get('/view/:file', (req, res) => {
-	if (!ENABLE_SUBMIT_VIEW) return res.send('Bạn không được cho phép để xem trạng thái bài nộp').end();
+	if (!ENABLE_SUBMIT_VIEW)
+		return res.send('Bạn không được cho phép để xem trạng thái bài nộp').end();
 
 	try {
 		res.write(getSubmitResultContent(req.params.file));

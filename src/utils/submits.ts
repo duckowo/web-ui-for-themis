@@ -120,7 +120,7 @@ function deleteSubmitFile(file: string): void {
 function getSubmitLogOverview(file: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const readStream = fs.createReadStream(file, { encoding: 'utf-8' });
-		
+
 		let acc = '';
 		let pos = 0;
 		let index = -1;

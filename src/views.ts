@@ -7,7 +7,7 @@ const views = Router();
 
 views.get('/', cookieParser(), (req, res) => {
 	const token = req.cookies.token;
-	
+
 	if (!token) {
 		res.redirect('/login');
 	} else {
@@ -62,7 +62,7 @@ views.get('/repass', cookieParser(), (req, res) => {
 
 views.get('/ranking', cookieParser(), (req, res) => {
 	const token = req.cookies.token;
-	
+
 	if (!token) {
 		res.redirect('/login');
 	} else {
